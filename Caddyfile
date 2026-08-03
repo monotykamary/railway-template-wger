@@ -1,0 +1,18 @@
+:8080 {
+  encode zstd gzip
+  handle /healthz {
+    rewrite * /
+    reverse_proxy 127.0.0.1:8000
+  }
+  handle_path /static/* {
+    root * /home/wger/static
+    file_server
+  }
+  handle_path /media/* {
+    root * /home/wger/media
+    file_server
+  }
+  handle {
+    reverse_proxy 127.0.0.1:8000
+  }
+}
