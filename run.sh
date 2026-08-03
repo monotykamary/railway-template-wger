@@ -12,6 +12,10 @@ set +a
 wger bootstrap --no-process-static
 python3 manage.py collectstatic --no-input --clear
 python3 manage.py migrate
+if ! python3 manage.py shell -c "from django.contrib.auth.models import User; User.objects.get(username='admin')" >/dev/null 2>&1; then
+  wger load-fixtures
+  wger create-or-reset-admin
+fi
 python3 manage.py set-site-url
 python3 manage.py shell -c "import os; from django.contrib.auth.models import User; u=User.objects.get(username='admin'); u.set_password(os.environ['WGER_ADMIN_PASSWORD']); u.email=os.environ.get('WGER_ADMIN_EMAIL','admin@example.com'); u.save()"
 gunicorn wger.wsgi:application --preload --bind 127.0.0.1:8000 &
