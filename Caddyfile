@@ -1,7 +1,7 @@
 :8080 {
   encode zstd gzip
   handle /healthz {
-    rewrite * /
+    rewrite * /login
     reverse_proxy 127.0.0.1:8000 {
       header_up X-Forwarded-Proto https
     }
