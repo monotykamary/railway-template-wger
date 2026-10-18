@@ -1,4 +1,4 @@
-FROM docker.io/library/caddy:2.11.4-alpine@sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648 AS caddy
+FROM docker.io/library/caddy:2.11.7-alpine@sha256:d8542f48d34a9cf4e4c11a478865229840e87e4c96ea3f439101f31a5d35f75f AS caddy
 FROM docker.io/wger/server:2.7.0@sha256:a54ae2d0b59e84028a5967193b459eff6c98f44518b561f63b2e709d16b2568c
 USER root
 ENV HOME=/home/wger
