@@ -28,7 +28,8 @@ def api(path,data=None,expected=200):
 if p.exists():state=json.loads(p.read_text())
 else:
  assert phase=='boot','missing workout state; refusing to reseed'
- marker='railway-'+secrets.token_hex(8);routine=api('routine/',{'name':marker,'description':'Synthetic release validation','start':'2026-11-15','end':'2026-12-15','is_public':False},201)
+ # Upstream Day.name has max_length=20; keep the synthetic name within its contract.
+ marker='rw-'+secrets.token_hex(6);routine=api('routine/',{'name':marker,'description':'Synthetic release validation','start':'2026-11-15','end':'2026-12-15','is_public':False},201)
  day=api('day/',{'routine':routine['id'],'order':1,'name':marker},201);state={'routine':routine['id'],'day':day['id'],'marker':marker};p.write_text(json.dumps(state));p.chmod(0o600)
 routine=api('routine/'+str(state['routine'])+'/');day=api('day/'+str(state['day'])+'/');assert routine['name']==state['marker'];assert day['name']==state['marker'] and day['routine']==state['routine']
 print(json.dumps({'ok':True,'phase':phase,'ui_css':True,'workout_routine_and_day_persisted':True,'negative_auth':True}))
