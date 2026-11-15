@@ -12,7 +12,14 @@ def login(password):
  s=requests.Session();g=request(s,'/en/user/login');assert g.status_code==200;token=re.search(r'name="csrfmiddlewaretoken" value="([^"]+)"',g.text);assert token
  r=request(s,'/en/user/login','POST',data={'csrfmiddlewaretoken':token.group(1),'login':'admin','password':password,'next':'/'});return s,r
 bad,r=login('wrong-'+pw);assert r.status_code==200,'invalid login unexpectedly redirected'
-s,r=login(pw);assert r.status_code in (302,303),'valid login rejected';good=request(s,'/');assert good.status_code==200 and 'logout' in good.text.lower()
+s,r=login(pw);assert r.status_code in (302,303),'valid login rejected';good=request(s,'/')
+# Authenticated root redirects through locale/dashboard; replay secure cookies at each hop.
+for _ in range(5):
+ if good.status_code not in (301,302,303,307,308):break
+ target=urllib.parse.urlsplit(urllib.parse.urljoin(b+'/',good.headers['Location']))
+ assert target.netloc==urllib.parse.urlsplit(b).netloc,'cross-origin login redirect'
+ good=request(s,target.path+('?' + target.query if target.query else ''))
+assert good.status_code==200 and 'logout' in good.text.lower(),f'authenticated page status {good.status_code}'
 anon=requests.Session();denied=request(anon,'/api/v2/routine/','POST',json={'name':'must-not-create'});assert denied.status_code in (401,403)
 def api(path,data=None,expected=200):
  r=request(s,'/api/v2/'+path,'GET' if data is None else 'POST',json=data) if data is not None else request(s,'/api/v2/'+path)
