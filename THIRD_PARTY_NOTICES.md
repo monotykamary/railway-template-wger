@@ -2,4 +2,4 @@
 
 wger 2.7.0: https://github.com/wger-project/wger/tree/2.7 — AGPL-3.0-or-later.
 
-Caddy 2.10.2: https://github.com/caddyserver/caddy — Apache-2.0. `assets/wger-icon.png` derives from upstream artwork.
+Caddy 2.11.9: https://github.com/caddyserver/caddy — Apache-2.0. `assets/wger-icon.png` derives from upstream artwork.

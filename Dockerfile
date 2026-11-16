@@ -6,6 +6,8 @@ COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY entrypoint.sh /usr/local/bin/wger-railway-entrypoint
 COPY run.sh /usr/local/bin/wger-railway-run
+RUN echo '633c50087916598c2a68704bfc43c7df9c924c5abf12560d7212e41098b4a7cd  /home/wger/src/settings/main.py' | sha256sum -c -
+COPY settings_main.py /home/wger/src/settings/main.py
 RUN chmod +x /usr/local/bin/wger-railway-entrypoint /usr/local/bin/wger-railway-run
 EXPOSE 8080
 ENTRYPOINT ["/usr/local/bin/wger-railway-entrypoint"]

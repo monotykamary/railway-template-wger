@@ -1,5 +1,7 @@
-## Dependency candidate — 2026-11-15
+## Dependency and secure-cookie candidate — 2026-11-16
 
-Update only the digest-pinned Caddy adapter binary from 2.11.7 to stable 2.11.9. Keep wger 2.7.0 and its database unchanged, with exact existing image digests. Every production FROM remains version/digest-pinned. Official Caddy release notes and manifest/platform evidence are retained in release artifacts.
+Update the digest-pinned Caddy adapter from 2.11.7 to stable 2.11.9. Keep wger 2.7.0 and PostgreSQL 17.11 unchanged with their exact image digests.
 
-Validation must load the real web UI/static asset, reject a wrong administrator password and unauthorized workout creation, create a workout routine and training day through the authenticated API, and retrieve both exact records after upgrade and redeploy without reseeding. Secure cookies are replayed explicitly only inside the worker-local HTTP fixture; production secure-cookie settings and HTTPS proxy headers are unchanged. Full live Railway HTTPS/product gates remain mandatory.
+The owned-TLS preflight found a session cookie without its Secure flag. Preserve the pinned image's original `settings/main.py` verbatim and append only `SESSION_COOKIE_SECURE = True` and `CSRF_COOKIE_SECURE = True`. The Docker build verifies the original upstream file hash before installing this AGPL-licensed adaptation. Do not work around this by replaying cookies over HTTP or weakening the client guard.
+
+Validation must use HTTPS to load the real UI/static asset, reject wrong credentials and unauthorized writes, verify actual secure session/CSRF cookies, create a workout routine and training day through the authenticated API, and retrieve the exact original records after upgrade and redeploy without reseeding. Full boat and live Railway product/persistence gates remain mandatory. This branch is a candidate, not a released template.
